@@ -195,6 +195,10 @@ async def update_blog(request: Request):
 			"title": data["title"],
 			"content": data["content"],
 			"author": author["_id"],
+			"upvotes": data["upvotes"],
+			"downvotes": data["downvotes"],
+			"upvoted_users": data["upvoted_users"],
+			"downvoted_users": data["downvoted_users"],
 			"updated_at": int(datetime.now().timestamp()),
 			"created_at": post["created_at"],
 			"pgp_status": post["pgp_status"]
