@@ -62,6 +62,13 @@ async def login(request: Request) -> JSONResponse:
 async def register(request: Request) -> JSONResponse:
 	data = await request.json()
 
+	if not all(key in data for key in ("unix", "email", "username", "password")): return JSONResponse(
+		{
+			"error": "Invalid data."
+		},
+		status_code = 400
+	)
+
 	if await auth_collection.find_one(
 		{
 			"unix": data["unix"]
