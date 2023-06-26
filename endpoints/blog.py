@@ -248,3 +248,114 @@ async def delete_blog(request: Request, post_id: str):
 		},
 		status_code = 200
 	)
+
+@Router.get("/{owner_id}/{post_id}/upvote")
+async def upvote_blog(request: Request, owner_id: int, post_id: int):
+	headers: dict = dict(request.headers)
+
+	if headers.get("Authorization") is None: return JSONResponse(
+		{
+			"error": "unauthorized"
+		},
+		status_code = 401
+	)
+
+	author: dict | None = await users.find_one(
+		{
+			"token": headers["Authorization"]
+		}
+	)
+
+	if author is None: return JSONResponse(
+		{
+			"error": "Invalid Token Provided."
+		},
+		status_code = 401
+	)
+
+	post: dict | None = await blogs.find_one(
+		{
+			"_id": post_id,
+			"author": owner_id
+		}
+	)
+
+	if post is None: return JSONResponse(
+		{
+			"error": "Blog not found."
+		},
+		status_code = 404
+	)
+
+	if author["_id"] in post["upvoted_users"]:
+		await blogs.update_one(
+			{
+				"_id": post_id,
+				"author": owner_id
+			},
+			{
+				"$pull": {
+					"upvoted_users": author["_id"]
+				},
+				"$inc": {
+					"upvotes": -1
+				}
+			}
+		)
+		return JSONResponse(
+			{
+				"action": "unupvoted"
+			},
+			status_code = 200
+		)
+
+	if author["_id"] in post["downvoted_users"]:
+		await blogs.update_one(
+			{
+				"_id": post_id,
+				"author": owner_id
+			},
+			{
+				"$addToSet": {
+					"upvoted_users": author["_id"]
+				},
+				"$pull": {
+					"downvoted_users": author["_id"]
+				},
+				"$inc": {
+					"upvotes": 1,
+					"downvotes": -1
+				}
+			}
+		)
+
+		return JSONResponse(
+			{
+				"action": "upvoted"
+			},
+			status_code = 200
+		)
+
+	await blogs.update_one(
+		{
+			"_id": post_id,
+			"author": owner_id
+		},
+		{
+			"$addToSet": {
+				"upvoted_users": author["_id"]
+			},
+			"$inc": {
+				"upvotes": 1
+			}
+		}
+	)
+
+	return JSONResponse(
+		{
+			"action": "upvoted"
+		},
+		status_code = 200
+	)
+
+	)
