@@ -100,6 +100,27 @@ async def register(request: Request) -> JSONResponse:
 		status_code = 409
 	)
 
+	if not all(isinstance(str, value) for value in data.values()): return JSONResponse(
+		{
+			"error": "Invalid data type."
+		},
+		status_code = 400
+	)
+
+	if len(data["unix"]) > 32: return JSONResponse(
+		{
+			"error": "Unix is too long."
+		},
+		status_code = 400
+	)
+
+	elif len(data["unix"]) < 3: return JSONResponse(
+		{
+			"error": "Unix is too short."
+		},
+		status_code = 400
+	)
+
 	creation_time = int(datetime.now().timestamp())
 	random_int: int = random.randint(100000, 999999)
 	user_id: int = creation_time * (10 ** len(str(random_int))) + random_int
