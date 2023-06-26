@@ -55,6 +55,12 @@ async def get_blog(owner_id: int, post_id: int):
 		{
 			"id": post_id,
 			"title": result["title"],
+			"author": {
+				"id": author["_id"],
+				"avatar": author["avatar"],
+				"unix": author["unix"],
+				"username": author["username"]
+			},
 			"content": result["content"],
 			"author": result["author"],
 			"updated_at": result["updated_at"],
