@@ -127,10 +127,16 @@ async def register(request: Request) -> JSONResponse:
 
 	payload = {
 		"_id": user_id,
+		"avatar": "https://avatars.githubusercontent.com/u/75207403?v=4",
 		"unix": data["unix"],
+		"email": data["email"],
 		"username": data["username"],
 		"password": hash(data["password"]),
-		"email": data["email"],
+		"bio": data["bio"],
+		"followers": [],
+		"following": [],
+		"posts": [],
+		"total_posts": 0,
 		"token": (
 			base64.b64encode(str(random.randint(0, 2**64)).encode()).decode() +
 			">>" +
@@ -138,7 +144,9 @@ async def register(request: Request) -> JSONResponse:
 			">>" +
 			base64.b64encode(str(creation_time).encode()).decode() +
 			"<"
-		)
+		),
+		"updated_at": creation_time,
+		"created_at": creation_time
 	}
 
 	await auth_collection.insert_one(
