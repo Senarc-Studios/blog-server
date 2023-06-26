@@ -62,12 +62,13 @@ async def get_blog(owner_id: int, post_id: int):
 				"username": author["username"]
 			},
 			"content": result["content"],
-			"author": result["author"],
-			"updated_at": result["updated_at"],
-			"created_at": result["created_at"]
-			# "pgp_signature": result["pgp_signature"],
-			# "pgp_public_key": result["pgp_public_key"],
-			# "pgp_verified": result["pgp_verified"]
+			"upvotes": result["upvotes"],
+			"downvotes": result["downvotes"],
+			"upvoted_users": result["upvoted_users"],
+			"downvoted_users": result["downvoted_users"],
+			"updated_at": result["creation_time"],
+			"created_at": result["creation_time"],
+			"pgp_status": "unverified"
 		}
 	)
 
