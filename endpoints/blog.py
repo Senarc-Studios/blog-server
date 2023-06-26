@@ -105,8 +105,12 @@ async def create_blog(request: Request):
 		{
 			"_id": post_id,
 			"title": data["title"],
-			"content": data["content"],
 			"author": author["_id"],
+			"content": data["content"],
+			"upvotes": 0,
+			"downvotes": 0,
+			"upvoted_users": [],
+			"downvoted_users": [],
 			"updated_at": creation_time,
 			"created_at": creation_time,
 			"pgp_status": "unverified"
