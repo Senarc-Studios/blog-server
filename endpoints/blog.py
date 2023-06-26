@@ -50,9 +50,10 @@ async def get_blog(owner_id: int, post_id: int):
 			},
 			status_code = 404
 		)
+
 	return JSONResponse(
 		{
-			"id": result["_id"],
+			"id": post_id,
 			"title": result["title"],
 			"content": result["content"],
 			"author": result["author"],
