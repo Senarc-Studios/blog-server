@@ -120,6 +120,12 @@ async def create_blog(request: Request):
 		{
 			"id": post_id,
 			"title": result["title"],
+			"author": {
+				"id": author["_id"],
+				"avatar": author["avatar"],
+				"unix": author["unix"],
+				"username": author["username"]
+			},
 			"content": result["content"],
 			"upvotes": 0,
 			"downvotes": 0,
