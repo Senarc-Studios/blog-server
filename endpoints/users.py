@@ -46,8 +46,12 @@ async def get_user(unix: str):
     return JSONResponse(
         {
             "id": result["_id"],
+            "avatar": result["avatar"],
             "username": result["username"],
             "unix": result["unix"],
+            "bio": result["bio"],
+            "followers": result["followers"],
+            "following": result["following"],
             "posts": posts,
             "total_posts": post_count,
             "updated_at": result["updated_at"],
