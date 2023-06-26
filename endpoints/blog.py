@@ -121,11 +121,15 @@ async def create_blog(request: Request):
 			"id": post_id,
 			"title": result["title"],
 			"content": result["content"],
-			"author": author["_id"],
+			"upvotes": 0,
+			"downvotes": 0,
+			"upvoted_users": [],
+			"downvoted_users": [],
 			"updated_at": creation_time,
 			"created_at": creation_time,
 			"pgp_status": "unverified"
-		}
+		},
+		status_code = 200
 	)
 
 @Router.patch("/update")
