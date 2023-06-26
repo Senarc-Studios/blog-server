@@ -1,3 +1,4 @@
+import re
 import base64
 import random
 
@@ -65,6 +66,13 @@ async def register(request: Request) -> JSONResponse:
 	if not all(key in data for key in ("unix", "email", "username", "password")): return JSONResponse(
 		{
 			"error": "Invalid data."
+		},
+		status_code = 400
+	)
+
+	if re.match(r"[^@]+@[^@]+\.[^@]+", data["email"]) is None: return JSONResponse(
+		{
+			"error": "Invalid email."
 		},
 		status_code = 400
 	)
