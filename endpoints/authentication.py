@@ -77,6 +77,8 @@ async def register(request: Request) -> JSONResponse:
 		status_code = 400
 	)
 
+	data["email"] = data["email"].split("+")[0] + "@" + data["email"].split("@")[-1] if "+" in data["email"] else data["email"]
+
 	if await auth_collection.find_one(
 		{
 			"unix": data["unix"]
