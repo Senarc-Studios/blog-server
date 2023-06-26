@@ -29,6 +29,20 @@ async def get_blog(owner_id: int, post_id: int):
 			"author": owner_id
 		}
 	)
+
+	author: dict | None = await users.find_one(
+		{
+			"_id": owner_id
+		}
+	)
+
+	author: dict = {
+		"_id": int("0"*24),
+		"avatar": "https://avatars.githubusercontent.com/u/0?v=4",
+		"unix": "deleted",
+		"username": "deleted"
+	} if author is None else author
+
 	if result is None:
 		return JSONResponse(
 			{
