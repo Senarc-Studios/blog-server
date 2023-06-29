@@ -149,6 +149,8 @@ async def register(request: Request) -> JSONResponse:
 		"created_at": creation_time
 	}
 
+	send_verification_email(data["email"])
+
 	await auth_collection.insert_one(
 		payload
 	)
