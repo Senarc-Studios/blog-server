@@ -121,6 +121,12 @@ async def register(request: Request) -> JSONResponse:
 		status_code = 400
 	)
 
+	elif not all(character in "abcdefghijklmnopqrstuvwxyz0123456789_." for character in data["unix"].lower()): return JSONResponse(
+		{
+			"error": "Unix can only contain ascii text, dots, and underscore."
+		}
+	)
+
 	creation_time = int(datetime.now().timestamp())
 	random_int: int = random.randint(100000, 999999)
 	user_id: int = creation_time * (10 ** len(str(random_int))) + random_int
