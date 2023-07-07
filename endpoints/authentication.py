@@ -143,6 +143,9 @@ async def register(request: Request) -> JSONResponse:
 		"following": [],
 		"posts": [],
 		"total_posts": 0,
+		"total_followers": 0,
+		"total_following": 0,
+		"email_verified": False,
 		"token": (
 			base64.b64encode(str(random.randint(0, 2**64)).encode()).decode() +
 			">>" +
@@ -151,6 +154,7 @@ async def register(request: Request) -> JSONResponse:
 			base64.b64encode(str(creation_time).encode()).decode() +
 			"<"
 		),
+		"disabled": False,
 		"updated_at": creation_time,
 		"created_at": creation_time
 	}
