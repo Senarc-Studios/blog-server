@@ -54,7 +54,23 @@ async def login(request: Request) -> JSONResponse:
 		status_code = 401
 	) if user_info is None else JSONResponse(
 		{
-			"token": user_info.get("token")
+			"_id": user_info["id"],
+			"avatar": user_info["avatar"],
+			"unix": user_info["unix"],
+			"email": user_info["email"],
+			"username": user_info["username"],
+			"bio": user_info["bio"],
+			"followers": user_info["followers"],
+			"following": user_info["following"],
+			"posts": user_info["posts"],
+			"total_posts": user_info["total_posts"],
+			"total_followers": user_info["total_followers"],
+			"total_following": user_info["total_following"],
+			"email_verified": user_info["email_verified"],
+			"token": user_info["token"],
+			"disabled": user_info["disabled"],
+			"updated_at": user_info["updated_at"],
+			"created_at": user_info["created_at"]
 		},
 		status_code = 201
 	)
