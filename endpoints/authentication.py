@@ -166,7 +166,24 @@ async def register(request: Request) -> JSONResponse:
 	)
 	return JSONResponse(
 		{
-			"token": payload["token"]
+			"id": user_id,
+			"avatar": "https://avatars.githubusercontent.com/u/75207403?v=4",
+			"unix": data["unix"],
+			"email": data["email"],
+			"username": data["username"],
+			"password": hash(data["password"]),
+			"bio": data["bio"],
+			"followers": [],
+			"following": [],
+			"posts": [],
+			"total_posts": 0,
+			"total_followers": 0,
+			"total_following": 0,
+			"email_verified": False,
+			"token": payload["token"],
+			"disabled": False,
+			"updated_at": creation_time,
+			"created_at": creation_time
 		},
 		status_code = 201
 	)
