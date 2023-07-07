@@ -3,6 +3,7 @@ import base64
 import random
 
 from backend.constants import Constants
+from backend.email import send_verification_email
 
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
