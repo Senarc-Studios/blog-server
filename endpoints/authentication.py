@@ -47,12 +47,21 @@ async def login(request: Request) -> JSONResponse:
 		}
 	)
 
-	return JSONResponse(
+	if user_info is None: return JSONResponse(
 		{
 			"error": "Invalid username or password."
 		},
 		status_code = 401
-	) if user_info is None else JSONResponse(
+	)
+
+	elif user_info["disabled"]: return JSONResponse(
+		{
+			"error": "Account disabled."
+		},
+		status_code = 401
+	)
+
+	else: JSONResponse(
 		{
 			"_id": user_info["id"],
 			"avatar": user_info["avatar"],
