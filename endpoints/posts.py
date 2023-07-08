@@ -80,3 +80,70 @@ async def create_post(request: Request) -> JSONResponse:
         status_code = 200
     )
 
+@Router.get("/{author_id}/{post_id}")
+async def get_post(request: Request, author_id: int, post_id: int) -> JSONResponse:
+    post: dict | None = await posts.find_one(
+        {
+            "_id": post_id,
+            "author": author_id
+        }
+    )
+
+    if post is None: return JSONResponse(
+        {
+            "error": "Post not found."
+        },
+        status_code = 404
+    )
+
+    if post["private"]:
+        user: dict | None = await users.find_one(
+            {
+                "token": request.headers.get("Authorization")
+            }
+        )
+
+        if user is None: return JSONResponse(
+            {
+                "error": "Post not found."
+            },
+            status_code = 404
+        )
+
+        author: dict | None = await users.find_one(
+            {
+                "_id": author_id
+            }
+        )
+
+        if user["_id"] in author["links"]:
+            return JSONResponse(
+                {
+                    "id": post["_id"],
+                    "content": post["content"],
+                    "private": post["private"],
+                    "edited": post["edited"],
+                    "author": post["author"],
+                    "hearts": post["hearts"],
+                    "comments": post["comments"],
+                    "created_at": post["created_at"],
+                    "updated_at": post["updated_at"]
+                },
+                status_code = 200
+            )
+
+    else:
+        return JSONResponse(
+            {
+                "id": post["_id"],
+                "content": post["content"],
+                "private": post["private"],
+                "edited": post["edited"],
+                "author": post["author"],
+                "hearts": post["hearts"],
+                "comments": post["comments"],
+                "created_at": post["created_at"],
+                "updated_at": post["updated_at"]
+            }
+        )
+
