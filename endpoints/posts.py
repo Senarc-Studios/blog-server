@@ -147,6 +147,54 @@ async def get_post(request: Request, author_id: int, post_id: int) -> JSONRespon
             }
         )
 
+@Router.get("/feed")
+async def get_feed(request: Request) -> JSONResponse:
+    user: dict | None = await users.find_one(
+        {
+            "token": request.headers.get("Authorization")
+        }
+    )
+
+    if user is None: return JSONResponse(
+        {
+            "error": "Invalid token."
+        },
+        status_code = 401
+    )
+
+    posts: list = await posts.find(
+        {
+            "author": {
+                "$in": user["following"]
+            }
+        },
+        limit = 7
+    ).sort(
+        [
+            ("created_at", -1)
+        ]
+    )
+
+    # Add more posts that the users don't follow.
+    if len(posts) < 15:
+        posts += await posts.find(
+            {
+                "author": {
+                    "$nin": user["following"]
+                }
+            },
+            limit = 7
+        ).sort(
+            [
+                ("created_at", -1)
+            ]
+        )
+
+    return JSONResponse(
+        posts,
+        status_code = 200
+    )
+
 @Router.get("/{author_id}/{post_id}/heart")
 async def heart_post(request: Request, author_id: int, post_id: int) -> JSONResponse:
     post: dict | None = await posts.find_one(
