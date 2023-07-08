@@ -18,7 +18,7 @@ app.include_router(
 
 @app.get("/")
 async def root(request: Request):
-    return "This is Senarc Blog API server."
+    return "This is Asterisk API server."
 
 if __name__ == "__main__":
     uvicorn.run(
