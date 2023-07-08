@@ -1,6 +1,8 @@
 import uvicorn
 
 from endpoints.authentication import Router as AuthRouter
+from endpoints.users import Router as UsersRouter
+from endpoints.posts import Router as PostsRouter
 from endpoints.blog import Router as BlogRouter
 
 from fastapi import FastAPI, Request
@@ -9,6 +11,8 @@ app = FastAPI()
 
 app.include_router(
     AuthRouter,
+    UsersRouter,
+    PostsRouter,
     BlogRouter
 )
 
