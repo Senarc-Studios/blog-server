@@ -147,3 +147,74 @@ async def get_post(request: Request, author_id: int, post_id: int) -> JSONRespon
             }
         )
 
+@Router.get("/{author_id}/{post_id}/heart")
+async def heart_post(request: Request, author_id: int, post_id: int) -> JSONResponse:
+    post: dict | None = await posts.find_one(
+        {
+            "_id": post_id,
+            "author": author_id
+        }
+    )
+
+    if post is None: return JSONResponse(
+        {
+            "error": "Post not found."
+        },
+        status_code = 404
+    )
+
+    user: dict | None = await users.find_one(
+        {
+            "token": request.headers.get("Authorization")
+        }
+    )
+
+    if user is None: return JSONResponse(
+        {
+            "error": "Invalid token."
+        },
+        status_code = 401
+    )
+
+    if user["_id"] in post["hearts"]["users"]:
+        await posts.update_one(
+            {
+                "_id": post_id
+            },
+            {
+                "$inc": {
+                    "hearts.count": -1
+                },
+                "$pull": {
+                    "hearts.users": user["_id"]
+                }
+            }
+        )
+
+        return JSONResponse(
+            {
+                "message": "Successfully unhearted post."
+            },
+            status_code = 200
+        )
+
+    await posts.update_one(
+        {
+            "_id": post_id
+        },
+        {
+            "$inc": {
+                "hearts.count": 1
+            },
+            "$push": {
+                "hearts.users": user["_id"]
+            }
+        }
+    )
+
+    return JSONResponse(
+        {
+            "message": "Successfully hearted post."
+        },
+        status_code = 200
+    )
